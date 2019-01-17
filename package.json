@@ -1,9 +1,20 @@
 
 {
     "name": "@magento/page-builder-types",
-    "version": "1.0.0",
+    "version": "1.0.0-beta5",
     "description": "TypeScript definitions for Magento Page Builder",
     "license": "MIT",
+    "dependencies": {
+        "@types/jquery": "1.10.27",
+        "@types/jqueryui": "^1.12.1",
+        "@types/knockout": "^3.4.43",
+        "@types/magento2": "https://github.com/magento/ts-types.git",
+        "@types/requirejs": "^2.1.31",
+        "@types/slick-carousel": "^1.6.32",
+        "@types/tinycolor": "^1.1.27",
+        "@types/tinymce": "^4.5.16",
+        "@types/underscore": "^1.8.1"
+    },
     "repository": {
         "type": "git",
         "url": "git@github.com:magento/page-builder-types.git"
