@@ -1,0 +1,15 @@
+
+{
+    "name": "@magento/page-builder-types",
+    "version": "1.0.0",
+    "description": "TypeScript definitions for Magento Page Builder",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:magento/page-builder-types.git"
+    },
+    "bugs": {
+        "url": "https://github.com/magento/page-builder-types/issues"
+    },
+    "homepage": "https://github.com/magento/page-builder-types#readme"
+  }
