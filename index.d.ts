@@ -284,10 +284,6 @@ declare module "Magento_Ui/js/lib/knockout/template/engine" {
   export = koTemplateEngine;
 }
 
-declare module "Magento_PageBuilder/js/utils/loader" {
-  export = requirejs;
-}
-
 declare let mageUtils: {
   /**
    * Generates a unique identifier.
@@ -1698,8 +1694,8 @@ declare module "Magento_PageBuilder/js/stage" {
   import "Magento_PageBuilder/js/binding/sortable";
   import ContentTypeCollectionInterface from "Magento_PageBuilder/js/content-type-collection";
   import DataStore from "Magento_PageBuilder/js/data-store";
-  import "Magento_PageBuilder/js/Magento_PageBuilder/js/resource/jquery/ui/jquery.ui.touch-punch";
   import PageBuilderInterface from "Magento_PageBuilder/js/page-builder.types";
+  import "Magento_PageBuilder/js/resource/jquery/ui/jquery.ui.touch-punch";
   import { DeferredInterface } from "Magento_PageBuilder/js/utils/promise-deferred";
   export default class Stage {
     public static readonly rootContainerName: string;
@@ -2404,7 +2400,7 @@ declare module "Magento_PageBuilder/js/wysiwyg/tinymce4" {
   import { AdditionalDataConfigInterface } from "Magento_PageBuilder/js/content-type-config.types";
   import DataStore from "Magento_PageBuilder/js/data-store";
   import WysiwygInterface from "Magento_PageBuilder/js/wysiwyg/wysiwyg-interface";
-  import WysiwygInstanceInterface from "Magento_PageBuilder/js/wysiwyg/wysiwygAdapter";
+  import WysiwygInstanceInterface from "wysiwygAdapter";
   /**
    * Inline editing wysiwyg component
    *
@@ -4030,12 +4026,12 @@ declare module "Magento_PageBuilder/js/content-type/root-container/content-type-
 }
 declare module "Magento_PageBuilder/js/content-type/row/preview" {
   /// <reference types="knockout" />
+  import "jarallax";
   import ContentTypeConfigInterface from "Magento_PageBuilder/js/content-type-config.types";
   import { OptionsInterface } from "Magento_PageBuilder/js/content-type-menu/option.types";
   import ContentTypeInterface from "Magento_PageBuilder/js/content-type.types";
   import ObservableUpdater from "Magento_PageBuilder/js/content-type/observable-updater";
   import PreviewCollection from "Magento_PageBuilder/js/content-type/preview-collection";
-  import "Magento_PageBuilder/js/content-type/row/jarallax";
 
   export default class Preview extends PreviewCollection {
     public getChildren: KnockoutComputed<{}>;
@@ -4174,8 +4170,8 @@ declare module "Magento_PageBuilder/js/content-type/slider/preview" {
   import { OptionsInterface } from "Magento_PageBuilder/js/content-type-menu/option.types";
   import ObservableUpdater from "Magento_PageBuilder/js/content-type/observable-updater";
   import PreviewCollection from "Magento_PageBuilder/js/content-type/preview-collection";
-  import "Magento_PageBuilder/js/content-type/slider/slick";
   import { DataObject } from "Magento_PageBuilder/js/data-store";
+  import "slick";
 
   export default class Preview extends PreviewCollection {
     public focusedSlide: KnockoutObservable<number>;
@@ -4694,7 +4690,7 @@ declare module "Magento_PageBuilder/js/content-type/tabs/preview" {
   import { OptionsInterface } from "Magento_PageBuilder/js/content-type-menu/option.types";
   import ObservableUpdater from "Magento_PageBuilder/js/content-type/observable-updater";
   import PreviewCollection from "Magento_PageBuilder/js/content-type/preview-collection";
-  import "Magento_PageBuilder/js/content-type/tabs/tabs";
+  import "tabs";
 
   export default class Preview extends PreviewCollection {
     public focusedTab: KnockoutObservable<number>;
