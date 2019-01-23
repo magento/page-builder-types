@@ -283,13 +283,12 @@ declare module "Magento_Ui/js/lib/knockout/template/engine" {
   export = koTemplateEngine;
 }
 
-declare function load(
-  dependencies: string[],
-  factory: (...results: any[]) => void,
-  onError?: () => void
-): void;
-
 declare module "Magento_PageBuilder/js/utils/loader" {
+  function load(
+    dependencies: string[],
+    factory: (...results: any[]) => void,
+    onError?: () => void
+  ): void;
   export = load;
 }
 
