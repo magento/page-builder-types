@@ -283,15 +283,6 @@ declare module "Magento_Ui/js/lib/knockout/template/engine" {
   export = koTemplateEngine;
 }
 
-declare module "Magento_PageBuilder/js/utils/loader" {
-  function load(
-    dependencies: string[],
-    factory: (...results: any[]) => void,
-    onError?: () => void
-  ): void;
-  export = load;
-}
-
 declare let mageUtils: {
   /**
    * Generates a unique identifier.
@@ -872,6 +863,13 @@ declare module "Magento_PageBuilder/js/content-type/master-collection" {
      */
     readonly renderChildTemplate: string;
   }
+}
+declare module "Magento_PageBuilder/js/utils/loader" {
+  export default function load(
+    dependencies: string[],
+    factory: (...results: any[]) => void,
+    onError?: () => void
+  ): void;
 }
 declare module "Magento_PageBuilder/js/content-type/content-type-events.types" {
   import ContentTypeCollectionInterface from "Magento_PageBuilder/js/content-type-collection.types";
@@ -5671,11 +5669,4 @@ declare module "Magento_PageBuilder/js/property/style-property-reader" {
      */
     read(element: HTMLElement, source: string): string | object;
   }
-}
-declare module "Magento_PageBuilder/js/utils/loader" {
-  export default function load(
-    dependencies: string[],
-    factory: (...results: any[]) => void,
-    onError?: () => void
-  ): void;
 }
