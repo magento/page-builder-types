@@ -218,8 +218,8 @@ interface JarallaxOptions {
  * @param {"destroy" | "onResize" | "onScroll"} methodName
  */
 declare function jarallax(
-  elements: Element | Element[] | NodeListOf<Element> | JQuery,
-  methodName: "destroy" | "onResize" | "onScroll"
+    elements: Element | Element[] | NodeListOf<Element> | JQuery,
+    methodName: "destroy" | "onResize" | "onScroll"
 ): void;
 
 /**
@@ -230,8 +230,8 @@ declare function jarallax(
  * @returns {boolean}
  */
 declare function jarallax(
-  elements: Element | Element[] | NodeListOf<Element> | JQuery,
-  methodName: "isVisible"
+    elements: Element | Element[] | NodeListOf<Element> | JQuery,
+    methodName: "isVisible"
 ): boolean;
 
 /**
@@ -241,8 +241,8 @@ declare function jarallax(
  * @param {JarallaxOptions} userOptions
  */
 declare function jarallax(
-  elements: Element | Element[] | NodeListOf<Element> | JQuery,
-  userOptions: JarallaxOptions
+    elements: Element | Element[] | NodeListOf<Element> | JQuery,
+    userOptions: JarallaxOptions
 ): void;
 
 interface JQuery {
@@ -316,8 +316,8 @@ interface DOMRectReadOnly {
 }
 
 type ResizeObserverCallback = (
-  entries: ResizeObserverEntry[],
-  observer: ResizeObserver
+    entries: ResizeObserverEntry[],
+    observer: ResizeObserver
 ) => void;
 
 interface ResizeObserverEntry {
@@ -340,6 +340,15 @@ declare module "Magento_PageBuilder/js/resource/resize-observer/ResizeObserver" 
   export = ResizeObserver;
 }
 
+declare let text: {
+  load(name: string, req: () => {}, onLoad: () => {}): void;
+  get(url: string, callback: () => {}, fail: () => {}, headers: {}): void;
+};
+
+declare module "mage/requirejs/text" {
+  export = text;
+}
+
 /**
  * Application entry point
  *
@@ -350,10 +359,10 @@ declare module "Magento_PageBuilder/js/resource/resize-observer/ResizeObserver" 
  * @returns {Boolean|undefined}
  */
 declare function run(
-  nodes: object,
-  parent?: object,
-  cached?: boolean,
-  merge?: boolean
+    nodes: object,
+    parent?: object,
+    cached?: boolean,
+    merge?: boolean
 ): boolean | undefined;
 
 declare module "uiLayout" {
@@ -369,9 +378,9 @@ interface MapUtilityInterface {
 }
 
 type MapUtilityConstructorInterface = new (
-  element: Element,
-  markers: [any],
-  additionalOptions: object
+    element: Element,
+    markers: [any],
+    additionalOptions: object
 ) => MapUtilityInterface;
 
 declare var mapUtilityConstructor: MapUtilityConstructorInterface;
@@ -381,11 +390,12 @@ declare module "Magento_PageBuilder/js/utils/map" {
 
 interface WidgetIntializerConfigInterface {
   config: any;
+  breakpoints: any;
 }
 
 declare function WidgetInitializer(
-  data: WidgetIntializerConfigInterface,
-  contextElement?: HTMLElement
+    data: WidgetIntializerConfigInterface,
+    contextElement?: HTMLElement
 ): void;
 
 declare module "Magento_PageBuilder/js/widget-initializer" {
@@ -488,14 +498,15 @@ declare module "Magento_PageBuilder/js/content-type-config.types" {
     reader: string;
     path: string;
     converters: ConverterInterface[];
-    elements: {
-      [key: string]: ContentTypeConfigAppearanceElementInterface;
-    };
+    elements: ContentTypeConfigAppearanceElementsInterface;
     preview_template: string;
     master_template: string;
     render: string;
     default: string;
     form: string;
+  }
+  export interface ContentTypeConfigAppearanceElementsInterface {
+    [key: string]: ContentTypeConfigAppearanceElementInterface;
   }
   export interface ConverterInterface {
     name: string;
@@ -531,7 +542,9 @@ declare module "Magento_PageBuilder/js/content-type-config.types" {
     preview_converter: string;
     var: string;
   }
-  export interface DataMappingHtmlInterface extends DataMappingInterface {}
+  export interface DataMappingHtmlInterface extends DataMappingInterface {
+    placeholder: string;
+  }
   export interface DataMappingCssInterface extends DataMappingInterface {
     filter: string[];
   }
@@ -550,9 +563,9 @@ declare module "Magento_PageBuilder/js/utils/object" {
    * @returns {TResult}
    */
   export function get<TResult>(
-    object: object,
-    path: string,
-    defaultValue?: TResult
+      object: object,
+      path: string,
+      defaultValue?: TResult
   ): TResult;
   /**
    * Set a value within an object via a path
@@ -563,9 +576,9 @@ declare module "Magento_PageBuilder/js/utils/object" {
    * @returns {TResult | undefined}
    */
   export function set<TResult = any>(
-    object: object,
-    path: string,
-    value: TResult
+      object: object,
+      path: string,
+      value: TResult
   ): TResult | undefined;
 }
 declare module "Magento_PageBuilder/js/data-store" {
@@ -591,15 +604,18 @@ declare module "Magento_PageBuilder/js/data-store" {
      */
     getState(): DataObject<any>;
     /**
-     * Update the state for the content type
+     * Set a specific keys value in the data store
      *
-     * @param {DataObject | string | number | boolean | any[] | null | undefined} data
-     * @param {string | number} key
+     * @param {string} key
+     * @param value
      */
-    update(
-      data: DataObject | undefined | null | string | number | boolean | any[],
-      key?: string | number
-    ): void;
+    set(key: string, value: any): void;
+    /**
+     * Update the entire state for the content type
+     *
+     * @param {DataObject} state
+     */
+    setState(state: DataObject): void;
     /**
      * Remove item from DataStore
      *
@@ -613,8 +629,8 @@ declare module "Magento_PageBuilder/js/data-store" {
      * @param {string | number} key
      */
     subscribe(
-      handler: (state: DataObject, event: Event) => void,
-      key?: string | number
+        handler: (state: DataObject, event: Event) => void,
+        key?: string | number
     ): void;
     /**
      * Emit state updates through events
@@ -622,7 +638,45 @@ declare module "Magento_PageBuilder/js/data-store" {
     private emitState;
   }
 }
+declare module "Magento_PageBuilder/js/config.types" {
+  import ContentTypeConfigInterface from "Magento_PageBuilder/js/content-type-config.types";
+  export default interface ConfigInterface {
+    menu_sections: MenuSectionInterface;
+    content_types: ContentTypeConfigInterface[];
+    stage_config: StageConfigInterface;
+    media_url: string;
+    preview_url: string;
+    render_url: string;
+    column_grid_default: string;
+    column_grid_max: string;
+    can_use_inline_editing_on_stage: boolean;
+    widgets: WidgetsInterface;
+  }
+  export type Mode = "Preview" | "Master";
+  export interface MenuSectionInterface {
+    [key: string]: MenuSectionItemInterface;
+  }
+  export interface MenuSectionItemInterface {
+    label: string;
+    name: string;
+    sortOrder: string;
+    translate: string;
+  }
+  export interface StageConfigInterface {
+    [key: string]: any;
+  }
+  export interface WidgetsInterface {
+    [key: string]: {
+      [key: string]: {
+        buttonSelector?: string;
+        showOverlay?: string;
+        dataRole?: string;
+      };
+    };
+  }
+}
 declare module "Magento_PageBuilder/js/config" {
+  import ConfigInterface, { Mode } from "Magento_PageBuilder/js/config.types";
   import ContentTypeConfigInterface from "Magento_PageBuilder/js/content-type-config.types";
   export default class Config {
     /**
@@ -630,14 +684,25 @@ declare module "Magento_PageBuilder/js/config" {
      *
      * @param config
      */
-    static setConfig(config: object): void;
+    static setConfig(config: ConfigInterface): void;
+    /**
+     * Set the current instances mode, this differs between preview or master depending on whether we're rendering the
+     * admins preview or rendering the master format.
+     *
+     * @param {"Preview" | "Master"} mode
+     */
+    static setMode(mode: Mode): void;
+    /**
+     * Retrieve the current instances mode
+     */
+    static getMode(): Mode;
     /**
      * Retrieve the init config
      *
      * @param {string} key
      * @returns {T}
      */
-    static getConfig<T = any>(key?: string): T;
+    static getConfig(key?: string): any;
     /**
      * Retrieve a content type from the configuration
      *
@@ -645,9 +710,10 @@ declare module "Magento_PageBuilder/js/config" {
      * @returns {any}
      */
     static getContentTypeConfig(
-      contentType: string
+        contentType: string
     ): ContentTypeConfigInterface;
     private static config;
+    private static mode;
   }
 }
 declare module "Magento_PageBuilder/js/content-type/appearance-config" {
@@ -661,8 +727,8 @@ declare module "Magento_PageBuilder/js/content-type/appearance-config" {
    * @api
    */
   export default function getAppearanceConfig(
-    contentType: string,
-    appearance: string
+      contentType: string,
+      appearance: string
   ): ContentTypeConfigAppearanceInterface;
 }
 declare module "Magento_PageBuilder/js/converter/converter-interface" {
@@ -719,8 +785,8 @@ declare module "Magento_PageBuilder/js/mass-converter/converter-interface" {
      * @returns {object}
      */
     fromDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
     /**
      * Process data before it's converted by element converters
@@ -730,8 +796,8 @@ declare module "Magento_PageBuilder/js/mass-converter/converter-interface" {
      * @returns {object}
      */
     toDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
   }
   export default ConverterInterface;
@@ -764,6 +830,95 @@ declare module "Magento_PageBuilder/js/mass-converter/converter-pool" {
   const _default: DataConverterPool;
   export default _default;
 }
+declare module "Magento_PageBuilder/js/content-type/observable-updater.types" {
+  /// <reference types="knockout" />
+  import { ContentTypeConfigAppearanceElementInterface } from "Magento_PageBuilder/js/content-type-config.types";
+  import ConverterPool from "Magento_PageBuilder/js/converter/converter-pool";
+  import { DataObject } from "Magento_PageBuilder/js/data-store";
+
+  export default interface ObservableObject {
+    [key: string]: {
+      [key: string]: KnockoutObservable<any>;
+    };
+  }
+  export interface GeneratedElementsData {
+    [key: string]: Record<string, {}>;
+    appearance?: any;
+  }
+  export type BindingGenerator = (
+      elementName: string,
+      config: ContentTypeConfigAppearanceElementInterface,
+      data: DataObject,
+      converterResolver: (config: object) => string,
+      converterPool: typeof ConverterPool,
+      previousData: Record<string, any>
+  ) => Record<string, any> | string;
+}
+declare module "Magento_PageBuilder/js/content-type/observable-updater/attributes" {
+  import { ContentTypeConfigAppearanceElementInterface } from "Magento_PageBuilder/js/content-type-config.types";
+  import ConverterPool from "Magento_PageBuilder/js/converter/converter-pool";
+  import { DataObject } from "Magento_PageBuilder/js/data-store";
+  /**
+   * Generate Knockout compatible bindings for the elements attribute binding
+   *
+   * @param elementName
+   * @param config
+   * @param data
+   * @param converterResolver
+   * @param converterPool
+   */
+  export default function generate(
+      elementName: string,
+      config: ContentTypeConfigAppearanceElementInterface,
+      data: DataObject,
+      converterResolver: (config: object) => string,
+      converterPool: typeof ConverterPool
+  ): Record<string, string>;
+}
+declare module "Magento_PageBuilder/js/content-type/observable-updater/css" {
+  import { ContentTypeConfigAppearanceElementInterface } from "Magento_PageBuilder/js/content-type-config.types";
+  import ConverterPool from "Magento_PageBuilder/js/converter/converter-pool";
+  import { DataObject } from "Magento_PageBuilder/js/data-store";
+  /**
+   * Generate Knockout compatible bindings for the elements css binding
+   *
+   * @param elementName
+   * @param config
+   * @param data
+   * @param converterResolver
+   * @param converterPool
+   * @param previousData
+   */
+  export default function generate(
+      elementName: string,
+      config: ContentTypeConfigAppearanceElementInterface,
+      data: DataObject,
+      converterResolver: (config: object) => string,
+      converterPool: typeof ConverterPool,
+      previousData: Record<string, boolean>
+  ): Record<string, boolean>;
+}
+declare module "Magento_PageBuilder/js/content-type/observable-updater/html" {
+  import { ContentTypeConfigAppearanceElementInterface } from "Magento_PageBuilder/js/content-type-config.types";
+  import ConverterPool from "Magento_PageBuilder/js/converter/converter-pool";
+  import { DataObject } from "Magento_PageBuilder/js/data-store";
+  /**
+   * Generate Knockout compatible bindings for the elements html binding
+   *
+   * @param elementName
+   * @param config
+   * @param data
+   * @param converterResolver
+   * @param converterPool
+   */
+  export default function generate(
+      elementName: string,
+      config: ContentTypeConfigAppearanceElementInterface,
+      data: DataObject,
+      converterResolver: (config: object) => string,
+      converterPool: typeof ConverterPool
+  ): string;
+}
 declare module "Magento_PageBuilder/js/utils/string" {
   /**
    * Convert from snake case to camel case
@@ -773,6 +928,29 @@ declare module "Magento_PageBuilder/js/utils/string" {
    * @api
    */
   export function fromSnakeToCamelCase(currentString: string): string;
+}
+declare module "Magento_PageBuilder/js/content-type/observable-updater/style" {
+  import { ContentTypeConfigAppearanceElementInterface } from "Magento_PageBuilder/js/content-type-config.types";
+  import ConverterPool from "Magento_PageBuilder/js/converter/converter-pool";
+  import { DataObject } from "Magento_PageBuilder/js/data-store";
+  /**
+   * Generate Knockout compatible bindings for the elements style binding
+   *
+   * @param elementName
+   * @param config
+   * @param data
+   * @param converterResolver
+   * @param converterPool
+   * @param previousData
+   */
+  export default function generate(
+      elementName: string,
+      config: ContentTypeConfigAppearanceElementInterface,
+      data: DataObject,
+      converterResolver: (config: object) => string,
+      converterPool: typeof ConverterPool,
+      previousData: Record<string, any>
+  ): Record<string, string>;
 }
 declare module "Magento_PageBuilder/js/binding/live-edit" {
   export {};
@@ -791,9 +969,9 @@ declare module "Magento_PageBuilder/js/drag-drop/move-content-type" {
    * @param {ContentTypeCollectionInterface} targetParent
    */
   export function moveContentType(
-    contentType: ContentTypeInterface | ContentTypeCollectionInterface,
-    targetIndex: number,
-    targetParent?: ContentTypeCollectionInterface
+      contentType: ContentTypeInterface | ContentTypeCollectionInterface,
+      targetIndex: number,
+      targetParent?: ContentTypeCollectionInterface
   ): void;
 }
 declare module "Magento_PageBuilder/js/utils/array" {
@@ -807,9 +985,9 @@ declare module "Magento_PageBuilder/js/utils/array" {
    * @returns {Array<any>}
    */
   export function moveArrayItem(
-    array: any[] | KnockoutObservableArray<any>,
-    fromIndex: number,
-    toIndex: number
+      array: any[] | KnockoutObservableArray<any>,
+      fromIndex: number,
+      toIndex: number
   ): any[] | KnockoutObservableArray<any>;
   /**
    * Move an array item from one array into another
@@ -820,9 +998,9 @@ declare module "Magento_PageBuilder/js/utils/array" {
    * @returns {Array<any>}
    */
   export function moveArrayItemIntoArray(
-    item: any,
-    array: any[] | KnockoutObservableArray<any>,
-    toIndex: number
+      item: any,
+      array: any[] | KnockoutObservableArray<any>,
+      toIndex: number
   ): any[] | KnockoutObservableArray<any>;
   /**
    * Remove an array item
@@ -832,8 +1010,8 @@ declare module "Magento_PageBuilder/js/utils/array" {
    * @returns {Array<any>}
    */
   export function removeArrayItem(
-    array: any[] | KnockoutObservableArray<any>,
-    item: any
+      array: any[] | KnockoutObservableArray<any>,
+      item: any
   ): any[] | KnockoutObservableArray<any>;
   /**
    * Search outwards from an array item until a callback matches
@@ -847,9 +1025,9 @@ declare module "Magento_PageBuilder/js/utils/array" {
    * @api
    */
   export function outwardSearch(
-    items: any[],
-    start: number,
-    callback: (item: any, index: number) => boolean
+      items: any[],
+      start: number,
+      callback: (item: any, index: number) => boolean
   ): any;
 }
 declare module "Magento_PageBuilder/js/binding/sortable-children" {
@@ -863,9 +1041,9 @@ declare module "Magento_PageBuilder/js/content-type" {
   import Preview from "Magento_PageBuilder/js/content-type/preview";
   import DataStore from "Magento_PageBuilder/js/data-store";
   export default class ContentType<
-    P extends Preview = Preview,
-    M extends Master = Master
-  > implements ContentTypeInterface<P, M> {
+      P extends Preview = Preview,
+      M extends Master = Master
+      > implements ContentTypeInterface<P, M> {
     id: string;
     parentContentType: ContentTypeCollectionInterface;
     stageId: string;
@@ -881,9 +1059,9 @@ declare module "Magento_PageBuilder/js/content-type" {
      * @param {string} stageId
      */
     constructor(
-      parentContentType: ContentTypeCollectionInterface,
-      config: ContentTypeConfigInterface,
-      stageId: string
+        parentContentType: ContentTypeCollectionInterface,
+        config: ContentTypeConfigInterface,
+        stageId: string
     );
     protected bindEvents(): void;
   }
@@ -991,9 +1169,9 @@ declare module "Magento_PageBuilder/js/content-type/content-type-events.types" {
 }
 declare module "Magento_PageBuilder/js/utils/loader" {
   export default function load(
-    dependencies: string[],
-    factory: (...results: any[]) => void,
-    onError?: (error: Error) => void
+      dependencies: string[],
+      factory: (...results: any[]) => void,
+      onError?: (error: Error) => void
   ): void;
 }
 declare module "Magento_PageBuilder/js/content-type/converter-resolver" {
@@ -1012,7 +1190,7 @@ declare module "Magento_PageBuilder/js/converter/converter-pool-factory" {
    * Create a new instance of converter pool
    */
   export default function create(
-    contentType: string
+      contentType: string
   ): Promise<typeof ConverterPool>;
 }
 declare module "Magento_PageBuilder/js/mass-converter/converter-pool-factory" {
@@ -1021,7 +1199,7 @@ declare module "Magento_PageBuilder/js/mass-converter/converter-pool-factory" {
    * Create a new instance of converter pool
    */
   export default function create(
-    contentType: string
+      contentType: string
   ): Promise<typeof ConverterPool>;
 }
 declare module "Magento_PageBuilder/js/content-type/observable-updater-factory" {
@@ -1035,8 +1213,8 @@ declare module "Magento_PageBuilder/js/content-type/observable-updater-factory" 
    * @returns {Promise<ObservableUpdater>}
    */
   export default function create(
-    config: ContentTypeConfigInterface,
-    converterResolver: (config: object) => string
+      config: ContentTypeConfigInterface,
+      converterResolver: (config: object) => string
   ): Promise<ObservableUpdater>;
 }
 declare module "Magento_PageBuilder/js/content-type/master-factory" {
@@ -1053,8 +1231,8 @@ declare module "Magento_PageBuilder/js/content-type/master-factory" {
    * @returns {Promise<ContentTypeInterface>}
    */
   export default function create(
-    contentType: ContentTypeInterface | ContentTypeCollectionInterface,
-    config: ContentTypeConfigInterface
+      contentType: ContentTypeInterface | ContentTypeCollectionInterface,
+      config: ContentTypeConfigInterface
   ): Promise<Master | MasterCollection>;
 }
 declare module "Magento_PageBuilder/js/content-type/preview-converter-resolver" {
@@ -1081,8 +1259,8 @@ declare module "Magento_PageBuilder/js/content-type/preview-factory" {
    * @returns {Promise<Preview | PreviewCollection>}
    */
   export default function create(
-    contentType: ContentTypeInterface | ContentTypeCollectionInterface,
-    config: ContentTypeConfigInterface
+      contentType: ContentTypeInterface | ContentTypeCollectionInterface,
+      config: ContentTypeConfigInterface
   ): Promise<Preview | PreviewCollection>;
 }
 declare module "Magento_PageBuilder/js/content-type-factory" {
@@ -1101,11 +1279,11 @@ declare module "Magento_PageBuilder/js/content-type-factory" {
    * @api
    */
   export default function createContentType(
-    config: ContentTypeConfigInterface,
-    parentContentType: ContentTypeCollectionInterface,
-    stageId: string,
-    data?: object,
-    childrenLength?: number
+      config: ContentTypeConfigInterface,
+      parentContentType: ContentTypeCollectionInterface,
+      stageId: string,
+      data?: object,
+      childrenLength?: number
   ): Promise<ContentTypeInterface | ContentTypeCollectionInterface>;
 
   export interface FieldDefaultsInterface {
@@ -1124,7 +1302,7 @@ declare module "Magento_PageBuilder/js/content-type/preview-collection" {
   import Preview from "Magento_PageBuilder/js/content-type/preview";
   import { PreviewCollectionInterface } from "Magento_PageBuilder/js/content-type/preview-collection.types";
   export default class PreviewCollection extends Preview
-    implements PreviewCollectionInterface {
+      implements PreviewCollectionInterface {
     contentType: ContentTypeCollectionInterface;
     /**
      * Retrieve the preview child template
@@ -1141,9 +1319,9 @@ declare module "Magento_PageBuilder/js/content-type/preview-collection" {
      * @returns {Promise<ContentTypeCollectionInterface> | void}
      */
     clone(
-      contentType: ContentTypeCollectionInterface,
-      autoAppend?: boolean,
-      direct?: boolean
+        contentType: ContentTypeCollectionInterface,
+        autoAppend?: boolean,
+        direct?: boolean
     ): Promise<ContentTypeCollectionInterface> | void;
     /**
      * Tries to call specified method of a current content type,
@@ -1168,9 +1346,9 @@ declare module "Magento_PageBuilder/js/content-type-collection" {
   import MasterCollection from "Magento_PageBuilder/js/content-type/master-collection";
   import PreviewCollection from "Magento_PageBuilder/js/content-type/preview-collection";
   export default class ContentTypeCollection<
-    P extends PreviewCollection = PreviewCollection,
-    M extends MasterCollection = MasterCollection
-  > extends ContentType<P, M> implements ContentTypeCollectionInterface<P, M> {
+      P extends PreviewCollection = PreviewCollection,
+      M extends MasterCollection = MasterCollection
+      > extends ContentType<P, M> implements ContentTypeCollectionInterface<P, M> {
     private collection;
     /**
      * @param {ContentTypeInterface} parentContentType
@@ -1178,9 +1356,9 @@ declare module "Magento_PageBuilder/js/content-type-collection" {
      * @param {string} stageId
      */
     constructor(
-      parentContentType: ContentTypeCollectionInterface,
-      config: ContentTypeConfigInterface,
-      stageId: string
+        parentContentType: ContentTypeCollectionInterface,
+        config: ContentTypeConfigInterface,
+        stageId: string
     );
     /**
      * Return the children of the current element
@@ -1188,8 +1366,8 @@ declare module "Magento_PageBuilder/js/content-type-collection" {
      * @returns {KnockoutObservableArray<ContentTypeInterface | ContentTypeCollectionInterface>}
      */
     getChildren(): KnockoutObservableArray<
-      ContentTypeInterface | ContentTypeCollectionInterface
-    >;
+        ContentTypeInterface | ContentTypeCollectionInterface
+        >;
     /**
      * Add a child into the observable array
      *
@@ -1291,6 +1469,14 @@ declare module "Magento_PageBuilder/js/content-type-menu/edit" {
      */
     open(): void;
     /**
+     * Flip flop to JSON and back again to ensure all data received from the form is serializable. Magento by default
+     * adds functions into some basic types which cannot be serialized when calling PostMessage.
+     *
+     * @param {DataObject} data
+     * @returns {DataObject}
+     */
+    private filterData;
+    /**
      * Determine the form namespace based on the currently set appearance
      *
      * @param {DataObject} contentTypeData
@@ -1345,7 +1531,7 @@ declare module "Magento_PageBuilder/js/drag-drop/registry" {
    * @param {ContentTypeConfigInterface} config
    */
   export function setDraggedContentTypeConfig(
-    config: ContentTypeConfigInterface
+      config: ContentTypeConfigInterface
   ): void;
   /**
    * Retrieve the dragged blocks config
@@ -1386,8 +1572,8 @@ declare module "Magento_PageBuilder/js/drag-drop/matrix" {
    * @returns {string}
    */
   export function getAllowedContainersClasses(
-    contentType: string,
-    stageId: string
+      contentType: string,
+      stageId: string
   ): string;
 
   export interface AllowedParentsInterface {
@@ -1406,8 +1592,8 @@ declare module "Magento_PageBuilder/js/drag-drop/drop-indicators" {
    * @returns {HTMLStyleElement}
    */
   export function showDropIndicators(
-    contentType: string,
-    stageId: string
+      contentType: string,
+      stageId: string
   ): HTMLStyleElement;
   /**
    * Hide the drop indicators
@@ -1429,16 +1615,8 @@ declare module "Magento_PageBuilder/js/drag-drop/sortable" {
    * @returns {JQueryUI.SortableOptions | any}
    */
   export function getSortableOptions(
-    preview: Preview
+      preview: Preview
   ): JQueryUI.SortableOptions | any;
-}
-declare module "Magento_PageBuilder/js/content-type/observable-updater.types" {
-  /// <reference types="knockout" />
-  export default interface ObservableObject {
-    [key: string]: {
-      [key: string]: KnockoutObservable<any>;
-    };
-  }
 }
 declare module "Magento_PageBuilder/js/content-type/preview.types" {
   /// <reference types="knockout" />
@@ -1455,12 +1633,7 @@ declare module "Magento_PageBuilder/js/content-type/preview.types" {
     placeholderCss: KnockoutObservable<object>;
     isPlaceholderVisible: KnockoutObservable<boolean>;
     isEmpty: KnockoutObservable<boolean>;
-    /**
-     * @deprecated
-     */
-    previewData: {
-      [key: string]: any;
-    };
+    appearance: KnockoutObservable<string>;
   }
 }
 declare module "Magento_PageBuilder/js/content-type/preview" {
@@ -1485,16 +1658,11 @@ declare module "Magento_PageBuilder/js/content-type/preview" {
     data: ObservableObject;
     displayLabel: KnockoutObservable<string>;
     display: KnockoutObservable<boolean>;
+    appearance: KnockoutObservable<string>;
     wrapperElement: Element;
     placeholderCss: KnockoutObservable<object>;
     isPlaceholderVisible: KnockoutObservable<boolean>;
     isEmpty: KnockoutObservable<boolean>;
-    /**
-     * @deprecated
-     */
-    previewData: {
-      [key: string]: any;
-    };
     /**
      * Fields that should not be considered when evaluating whether an object has been configured.
      *
@@ -1514,9 +1682,9 @@ declare module "Magento_PageBuilder/js/content-type/preview" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Retrieve the preview template
@@ -1548,14 +1716,6 @@ declare module "Magento_PageBuilder/js/content-type/preview" {
      * @param {string} value
      */
     updateData(key: string, value: string): void;
-    /**
-     * Update the data value of a part of our internal Knockout data store
-     *
-     * @param {string} key
-     * @param value
-     * @deprecated
-     */
-    updateDataValue(key: string, value: any): void;
     /**
      * Set state based on mouseover event for the preview
      *
@@ -1610,9 +1770,9 @@ declare module "Magento_PageBuilder/js/content-type/preview" {
      * @returns {Promise<ContentTypeInterface> | void}
      */
     clone(
-      contentType: ContentTypeInterface | ContentTypeCollectionInterface,
-      autoAppend?: boolean,
-      direct?: boolean
+        contentType: ContentTypeInterface | ContentTypeCollectionInterface,
+        autoAppend?: boolean,
+        direct?: boolean
     ): Promise<ContentTypeInterface> | void;
     /**
      * Handle content type removal
@@ -1655,14 +1815,14 @@ declare module "Magento_PageBuilder/js/content-type/preview" {
      * @param {boolean} direct
      */
     protected dispatchContentTypeCloneEvents(
-      originalContentType:
-        | ContentTypeInterface
-        | ContentTypeCollectionInterface,
-      duplicateContentType:
-        | ContentTypeInterface
-        | ContentTypeCollectionInterface,
-      index: number,
-      direct: boolean
+        originalContentType:
+            | ContentTypeInterface
+            | ContentTypeCollectionInterface,
+        duplicateContentType:
+            | ContentTypeInterface
+            | ContentTypeCollectionInterface,
+        index: number,
+        direct: boolean
     ): void;
     /**
      * Bind events
@@ -1672,12 +1832,6 @@ declare module "Magento_PageBuilder/js/content-type/preview" {
      * After observables updated, allows to modify observables
      */
     protected afterObservablesUpdated(): void;
-    /**
-     * Setup fields observables within the data class property
-     *
-     * @deprecated
-     */
-    protected setupDataFields(): void;
     /**
      * Does the current instance have any children or values different from the default for it's type?
      *
@@ -1704,33 +1858,57 @@ declare module "Magento_PageBuilder/js/content-type/preview" {
   }
 }
 declare module "Magento_PageBuilder/js/content-type/observable-updater" {
-  import { ConverterInterface } from "Magento_PageBuilder/js/content-type-config.types";
+  import {
+    ContentTypeConfigAppearanceElementsInterface,
+    ConverterInterface
+  } from "Magento_PageBuilder/js/content-type-config.types";
   import ConverterPool from "Magento_PageBuilder/js/converter/converter-pool";
   import { DataObject } from "Magento_PageBuilder/js/data-store";
   import MassConverterPool from "Magento_PageBuilder/js/mass-converter/converter-pool";
   import Master from "Magento_PageBuilder/js/content-type/master";
+  import { GeneratedElementsData } from "Magento_PageBuilder/js/content-type/observable-updater.types";
   import Preview from "Magento_PageBuilder/js/content-type/preview";
   export default class ObservableUpdater {
     private converterPool;
     private massConverterPool;
     private converterResolver;
+    private previousData;
+    private bindingGenerators;
     /**
      * @param {typeof ConverterPool} converterPool
      * @param {typeof MassConverterPool} massConverterPool
      * @param {(config: object) => string} converterResolver
      */
     constructor(
-      converterPool: typeof ConverterPool,
-      massConverterPool: typeof MassConverterPool,
-      converterResolver: (config: object) => string
+        converterPool: typeof ConverterPool,
+        massConverterPool: typeof MassConverterPool,
+        converterResolver: (config: object) => string
     );
     /**
-     * Generate our data.ELEMENT.style Knockout observable objects for use within master and preview formats.
+     * Update the associated viewModel with the generated data
+     *
+     * We create an API for each potential binding and make it available in the master and preview templates through
+     * the data variable. Each data variable will have associated observables that are updated on a data change.
      *
      * @param {Preview} viewModel
      * @param {DataObject} data
      */
     update(viewModel: Preview | Master, data: DataObject): void;
+    /**
+     * Generate binding object to be applied to master format
+     *
+     * This function iterates through each element defined in the content types XML and generates a nested object of
+     * the associated Knockout binding data. We support 5 bindings attributes, style, css, html & tag.
+     *
+     * @param elements
+     * @param converters
+     * @param data
+     */
+    generateKnockoutBindings(
+        elements: ContentTypeConfigAppearanceElementsInterface,
+        converters: ConverterInterface[],
+        data: DataObject
+    ): GeneratedElementsData;
     /**
      * Process data for elements before its converted to knockout format
      *
@@ -1738,31 +1916,19 @@ declare module "Magento_PageBuilder/js/content-type/observable-updater" {
      * @param {ConverterInterface[]} convertersConfig
      * @returns {object}
      */
-    convertData(data: object, convertersConfig: ConverterInterface[]): object;
+    convertData(
+        data: DataObject,
+        convertersConfig: ConverterInterface[]
+    ): DataObject;
     /**
-     * Convert attributes
+     * Generate an individual knockout binding
      *
-     * @param {object} config
-     * @param {DataObject} data
-     * @returns {object}
+     * @param binding
+     * @param elementName
+     * @param config
+     * @param data
      */
-    private convertAttributes;
-    /**
-     * Convert style properties
-     *
-     * @param {object}config
-     * @param {object}data
-     * @returns {object}
-     */
-    private convertStyle;
-    /**
-     * Convert html property
-     *
-     * @param {object} config
-     * @param {DataObject} data
-     * @returns {string}
-     */
-    private convertHtml;
+    private generateKnockoutBinding;
   }
 }
 declare module "Magento_PageBuilder/js/content-type/master" {
@@ -1780,8 +1946,8 @@ declare module "Magento_PageBuilder/js/content-type/master" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Retrieve the render template
@@ -1807,6 +1973,8 @@ declare module "Magento_PageBuilder/js/content-type/master" {
     protected afterObservablesUpdated(): void;
     /**
      * Update observables
+     *
+     * @deprecated
      */
     private updateObservables;
   }
@@ -1818,9 +1986,9 @@ declare module "Magento_PageBuilder/js/content-type.types" {
   import Preview from "Magento_PageBuilder/js/content-type/preview";
   import DataStore from "Magento_PageBuilder/js/data-store";
   export default interface ContentTypeInterface<
-    P extends Preview = Preview,
-    M extends Master = Master
-  > {
+      P extends Preview = Preview,
+      M extends Master = Master
+      > {
     id: string;
     stageId: string;
     parentContentType?: ContentTypeCollectionInterface;
@@ -1838,12 +2006,12 @@ declare module "Magento_PageBuilder/js/content-type-collection.types" {
   import MasterCollection from "Magento_PageBuilder/js/content-type/master-collection";
   import PreviewCollection from "Magento_PageBuilder/js/content-type/preview-collection";
   export default interface ContentTypeCollectionInterface<
-    P extends PreviewCollection = PreviewCollection,
-    M extends MasterCollection = MasterCollection
-  > extends ContentTypeInterface<P, M> {
+      P extends PreviewCollection = PreviewCollection,
+      M extends MasterCollection = MasterCollection
+      > extends ContentTypeInterface<P, M> {
     readonly children: KnockoutObservableArray<
-      ContentTypeCollectionInterface | ContentTypeInterface
-    >;
+        ContentTypeCollectionInterface | ContentTypeInterface
+        >;
     /**
      * Add a child into the observable array
      *
@@ -1863,8 +2031,8 @@ declare module "Magento_PageBuilder/js/content-type-collection.types" {
      * @returns {KnockoutObservableArray<ContentTypeInterface | ContentTypeCollectionInterface>}
      */
     getChildren(): KnockoutObservableArray<
-      ContentTypeInterface | ContentTypeCollectionInterface
-    >;
+        ContentTypeInterface | ContentTypeCollectionInterface
+        >;
     /**
      * Remove a child from the observable array
      *
@@ -1880,12 +2048,12 @@ declare module "Magento_PageBuilder/js/collection" {
 
   export default class Collection {
     children: KnockoutObservableArray<
-      ContentTypeInterface | ContentTypeCollectionInterface
-    >;
-    constructor(
-      children?: KnockoutObservableArray<
         ContentTypeInterface | ContentTypeCollectionInterface
-      >
+        >;
+    constructor(
+        children?: KnockoutObservableArray<
+            ContentTypeInterface | ContentTypeCollectionInterface
+            >
     );
     /**
      * Return the children of the current element
@@ -1893,8 +2061,8 @@ declare module "Magento_PageBuilder/js/collection" {
      * @returns {KnockoutObservableArray<ContentTypeInterface | ContentTypeCollectionInterface>}
      */
     getChildren(): KnockoutObservableArray<
-      ContentTypeInterface | ContentTypeCollectionInterface
-    >;
+        ContentTypeInterface | ContentTypeCollectionInterface
+        >;
     /**
      * Add a child into the observable array
      *
@@ -1914,9 +2082,9 @@ declare module "Magento_PageBuilder/js/collection" {
      * @param children
      */
     setChildren(
-      children: KnockoutObservableArray<
-        ContentTypeInterface | ContentTypeCollectionInterface
-      >
+        children: KnockoutObservableArray<
+            ContentTypeInterface | ContentTypeCollectionInterface
+            >
     ): void;
   }
 }
@@ -1942,6 +2110,20 @@ declare module "Magento_PageBuilder/js/utils/check-stage-full-screen" {
    */
   export default function checkStageFullScreen(stageId: string): boolean;
 }
+declare module "Magento_PageBuilder/js/utils/promise-deferred" {
+  /**
+   * Returns a deferred promise
+   *
+   * @returns {DeferredInterface}
+   * @api
+   */
+  export default function deferred(): DeferredInterface;
+  export interface DeferredInterface {
+    resolve: (...args: any[]) => void;
+    reject: (...args: any[]) => void;
+    promise: Promise<{}>;
+  }
+}
 declare module "Magento_PageBuilder/js/content-type-toolbar" {
   /// <reference types="knockout" />
   import {
@@ -1951,11 +2133,14 @@ declare module "Magento_PageBuilder/js/content-type-toolbar" {
   import Preview from "Magento_PageBuilder/js/content-type/preview";
   import { PreviewCollectionInterface } from "Magento_PageBuilder/js/content-type/preview-collection.types";
   import { PreviewInterface } from "Magento_PageBuilder/js/content-type/preview.types";
+  import { DeferredInterface } from "Magento_PageBuilder/js/utils/promise-deferred";
 
   export default class Toolbar {
     options: KnockoutObservableArray<OptionInterface>;
     observer: MutationObserver;
+    afterRenderDeferred: DeferredInterface;
     private preview;
+    private element;
     /**
      * Toolbar Options constructor
      *
@@ -1969,6 +2154,12 @@ declare module "Magento_PageBuilder/js/content-type-toolbar" {
      * @returns {string}
      */
     readonly template: string;
+    /**
+     * On render init the toolbar
+     *
+     * @param {Element} element
+     */
+    afterRender(element: Element): void;
     /**
      * Upon clicking the option update the value as directed
      * When user toggles the option off, set the value back to default
@@ -2005,7 +2196,7 @@ declare module "Magento_PageBuilder/js/content-type-toolbar" {
     toolbar: Toolbar;
   }
   export interface ContentTypeToolbarPreviewCollectionInterface
-    extends PreviewCollectionInterface {
+      extends PreviewCollectionInterface {
     toolbar: Toolbar;
   }
 }
@@ -2054,9 +2245,9 @@ declare module "Magento_PageBuilder/js/panel/menu/content-type" {
      * @param {string} stageId
      */
     constructor(
-      identifier: string,
-      config: ContentTypeConfigInterface,
-      stageId: string
+        identifier: string,
+        config: ContentTypeConfigInterface,
+        stageId: string
     );
     /**
      * Retrieve the config object
@@ -2152,6 +2343,79 @@ declare module "Magento_PageBuilder/js/panel" {
     private populateContentTypes;
   }
 }
+declare module "Magento_PageBuilder/js/master-format/render/serialize" {
+  import ContentTypeInterface from "Magento_PageBuilder/js/content-type.types";
+  import { DataObject } from "Magento_PageBuilder/js/data-store";
+  export interface TreeItem {
+    name: string;
+    id: string;
+    data: DataObject;
+    children: TreeItem[];
+  }
+  /**
+   * Serialize the tree as a simplified object for rendering
+   *
+   * @param contentType
+   */
+  export function buildTree(contentType: ContentTypeInterface): TreeItem;
+  /**
+   * Get a serialized version of the tree
+   *
+   * @param contentType
+   */
+  export function getSerializedTree(
+      contentType: ContentTypeInterface
+  ): TreeItem;
+}
+declare module "Magento_PageBuilder/js/master-format/render" {
+  import ContentTypeCollectionInterface from "Magento_PageBuilder/js/content-type-collection.types";
+  export default class MasterFormatRenderer {
+    stageId: string;
+    channel: MessageChannel;
+    ready: boolean;
+    private readyDeferred;
+    /**
+     * @param stageId
+     */
+    constructor(stageId: string);
+    /**
+     * Render the root container into a string utilising our sandboxed iframe
+     *
+     * @param {ContentTypeCollection} rootContainer
+     * @returns {Promise<string>}
+     */
+    applyBindings(
+        rootContainer: ContentTypeCollectionInterface
+    ): Promise<string>;
+    /**
+     * Create a channel to communicate with our sandboxed iframe. Firstly add a listener to the current window and then
+     * set the src of the iframe. Listening for a specific message event with a predefined term and then hand over the
+     * MessageChannel port to allow communication between the main window and iframe.
+     */
+    setupChannel(): void;
+    /**
+     * Use the text! RequireJS plugin to load a template and send it back to the child render iframe
+     *
+     * @param name
+     */
+    private loadTemplate;
+    /**
+     * Retrieve the render frame
+     *
+     * @returns {HTMLIFrameElement}
+     */
+    private getRenderFrame;
+  }
+}
+declare module "Magento_PageBuilder/js/master-format/validator" {
+  /**
+   * Validate if content has page builder format by checking for any data-content-type attributes
+   *
+   * @param {string} content
+   * @returns {boolean}
+   */
+  export default function validate(content: string): boolean;
+}
 declare module "Magento_PageBuilder/js/utils/directives" {
   /**
    * Convert a directive into our data URI
@@ -2202,38 +2466,6 @@ declare module "Magento_PageBuilder/js/utils/directives" {
    */
   export function convertMediaDirectivesToUrls(html: string): string;
 }
-declare module "Magento_PageBuilder/js/master-format/filter-html" {
-  /**
-   * Filter the HTML output to only include necessary attributes & nodes
-   *
-   * @param {JQuery} element
-   * @returns {JQuery}
-   */
-  export default function filterHtml(element: JQuery): JQuery;
-}
-declare module "Magento_PageBuilder/js/master-format/render" {
-  import ContentTypeCollectionInterface from "Magento_PageBuilder/js/content-type-collection.types";
-  export default class MasterFormatRenderer {
-    /**
-     * Render the root container into a string
-     *
-     * @param {ContentTypeCollection} rootContainer
-     * @returns {Promise<string>}
-     */
-    applyBindings(
-      rootContainer: ContentTypeCollectionInterface
-    ): Promise<string>;
-  }
-}
-declare module "Magento_PageBuilder/js/master-format/validator" {
-  /**
-   * Validate if content has page builder format by checking for any data-content-type attributes
-   *
-   * @param {string} content
-   * @returns {boolean}
-   */
-  export default function validate(content: string): boolean;
-}
 declare module "Magento_PageBuilder/js/stage-builder" {
   import Stage from "Magento_PageBuilder/js/stage";
   /**
@@ -2254,22 +2486,9 @@ declare module "Magento_PageBuilder/js/stage-events.types" {
     stageId: string;
   }
 }
-declare module "Magento_PageBuilder/js/utils/promise-deferred" {
-  /**
-   * Returns a deferred promise
-   *
-   * @returns {DeferredInterface}
-   * @api
-   */
-  export default function deferred(): DeferredInterface;
-  export interface DeferredInterface {
-    resolve: (...args: any[]) => void;
-    reject: (...args: any[]) => void;
-    promise: Promise<{}>;
-  }
-}
 declare module "Magento_PageBuilder/js/stage" {
   /// <reference types="knockout" />
+  /// <reference types="jquery" />
   import "Magento_PageBuilder/js/resource/jquery/ui/jquery.ui.touch-punch";
   import "Magento_PageBuilder/js/binding/sortable";
   import ContentTypeCollectionInterface from "Magento_PageBuilder/js/content-type-collection.types";
@@ -2288,6 +2507,11 @@ declare module "Magento_PageBuilder/js/stage" {
     dataStore: DataStore;
     afterRenderDeferred: DeferredInterface;
     rootContainer: ContentTypeCollectionInterface;
+    /**
+     * We always complete a single render when the stage is first loaded, so we can set the lock when the stage is
+     * created. The lock is used to halt the parent forms submission when Page Builder is rendering.
+     */
+    renderingLock: JQueryDeferred<void>;
     private template;
     private render;
     private collection;
@@ -2302,8 +2526,8 @@ declare module "Magento_PageBuilder/js/stage" {
      * @param {ContentTypeCollectionInterface} rootContainer
      */
     constructor(
-      pageBuilder: PageBuilderInterface,
-      rootContainer: ContentTypeCollectionInterface
+        pageBuilder: PageBuilderInterface,
+        rootContainer: ContentTypeCollectionInterface
     );
     /**
      * Get template.
@@ -2414,13 +2638,13 @@ declare module "Magento_PageBuilder/js/uploader" {
      * @param {Function} onDeleteCallback Called when currently set image is deleted from storage
      */
     constructor(
-      name: string,
-      uploaderConfig: object,
-      contentTypeId: string,
-      dataStore: DataStore,
-      initialValue: string | any[],
-      onChangeCallback?: (data: object[]) => void,
-      onDeleteCallback?: () => void
+        name: string,
+        uploaderConfig: object,
+        contentTypeId: string,
+        dataStore: DataStore,
+        initialValue: string | any[],
+        onChangeCallback?: (data: object[]) => void,
+        onDeleteCallback?: () => void
     );
     /**
      * Default callback for upload event
@@ -2452,7 +2676,7 @@ declare module "Magento_PageBuilder/js/content-type-menu/hide-show-option" {
     OptionConfigInterface
   } from "Magento_PageBuilder/js/content-type-menu/option.types";
   export default class HideShowOption extends Option
-    implements OptionInterface {
+      implements OptionInterface {
     static showText: string;
     static showIcon: string;
     static hideText: string;
@@ -2476,12 +2700,12 @@ declare module "Magento_PageBuilder/js/wysiwyg/wysiwyg-interface" {
    * Provides an interface for the constructor of a WysiwygInterface object
    */
   export type WysiwygConstructorInterface = new (
-    contentTypeId: string,
-    elementId: string,
-    config: AdditionalDataConfigInterface,
-    dataStore: DataStore,
-    fieldName: string,
-    stageId: string
+      contentTypeId: string,
+      elementId: string,
+      config: AdditionalDataConfigInterface,
+      dataStore: DataStore,
+      fieldName: string,
+      stageId: string
   ) => WysiwygInterface;
   /**
    * Describes an instance of a WYSIWYG component not specific to a specific editor
@@ -2513,10 +2737,10 @@ declare module "Magento_PageBuilder/js/utils/nesting-link-dialog" {
    * @param {string} linkUrlField
    */
   export default function nestingLinkDialog(
-    dataStore: DataStore,
-    wysiwyg: WysiwygInterface,
-    inlineMessageField: string,
-    linkUrlField: string
+      dataStore: DataStore,
+      wysiwyg: WysiwygInterface,
+      inlineMessageField: string,
+      linkUrlField: string
   ): void;
 }
 declare module "Magento_PageBuilder/js/wysiwyg/factory" {
@@ -2534,13 +2758,13 @@ declare module "Magento_PageBuilder/js/wysiwyg/factory" {
    * @returns {Wysiwyg}
    */
   export default function create(
-    contentTypeId: string,
-    elementId: string,
-    contentTypeName: string,
-    config: AdditionalDataConfigInterface,
-    dataStore: DataStore,
-    fieldName: string,
-    stageId: string
+      contentTypeId: string,
+      elementId: string,
+      contentTypeName: string,
+      config: AdditionalDataConfigInterface,
+      dataStore: DataStore,
+      fieldName: string,
+      stageId: string
   ): Promise<WysiwygInterface>;
 }
 declare module "Magento_PageBuilder/js/content-type/banner/preview" {
@@ -2727,7 +2951,7 @@ declare module "Magento_PageBuilder/js/content-type/banner/wysiwyg/tinymce4/comp
   import WysiwygComponentInitializerInterface from "Magento_PageBuilder/js/wysiwyg/component-initializer-interface";
   import WysiwygInterface from "Magento_PageBuilder/js/wysiwyg/wysiwyg-interface";
   export default class ComponentInitializer
-    implements WysiwygComponentInitializerInterface {
+      implements WysiwygComponentInitializerInterface {
     /**
      * The editor element
      */
@@ -2777,9 +3001,9 @@ declare module "Magento_PageBuilder/js/content-type/block/preview" {
      * @inheritdoc
      */
     constructor(
-      contentType: ContentTypeInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Return an array of options
@@ -2807,8 +3031,8 @@ declare module "Magento_PageBuilder/js/content-type/block/preview" {
      * @param {string} identifierName
      */
     protected displayPreviewPlaceholder(
-      data: DataObject,
-      identifierName: string
+        data: DataObject,
+        identifierName: string
     ): void;
     /**
      *
@@ -2817,9 +3041,9 @@ declare module "Magento_PageBuilder/js/content-type/block/preview" {
      * @param {string} labelKey
      */
     protected processRequest(
-      data: DataObject,
-      identifierName: string,
-      labelKey: string
+        data: DataObject,
+        identifierName: string,
+        labelKey: string
     ): void;
     /**
      * Toggle display of block preview.  If showing block preview, add hidden mode to PB preview.
@@ -2842,8 +3066,8 @@ declare module "Magento_PageBuilder/js/mass-converter/widget-directive-abstract"
      * @returns {WidgetDirectiveAttributes}
      */
     fromDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): WidgetDirectiveAttributes;
     /**
      * Convert value to knockout format
@@ -2853,8 +3077,8 @@ declare module "Magento_PageBuilder/js/mass-converter/widget-directive-abstract"
      * @returns {object}
      */
     toDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
     /**
      * Build the directive string using the supplies attributes
@@ -2902,8 +3126,8 @@ declare module "Magento_PageBuilder/js/content-type/block/mass-converter/widget-
      * @returns {object}
      */
     fromDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
     /**
      * Convert value to knockout format
@@ -2913,8 +3137,8 @@ declare module "Magento_PageBuilder/js/content-type/block/mass-converter/widget-
      * @returns {object}
      */
     toDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
   }
 }
@@ -2924,7 +3148,7 @@ declare module "Magento_PageBuilder/js/content-type-menu/conditional-remove-opti
     OptionConfigInterface
   } from "Magento_PageBuilder/js/content-type-menu/option.types";
   export default class ConditionalRemoveOption extends Option
-    implements OptionInterface {
+      implements OptionInterface {
     /**
      * @param {OptionConfigInterface} config
      */
@@ -2962,9 +3186,9 @@ declare module "Magento_PageBuilder/js/utils/delay-until" {
    * @param {number} interval
    */
   export default function delayUntil(
-    callback: () => void,
-    condition: () => boolean,
-    interval?: number
+      callback: () => void,
+      condition: () => boolean,
+      interval?: number
   ): void;
 }
 declare module "Magento_PageBuilder/js/content-type/buttons/preview" {
@@ -2985,9 +3209,9 @@ declare module "Magento_PageBuilder/js/content-type/buttons/preview" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeCollectionInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeCollectionInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Bind events
@@ -3011,8 +3235,8 @@ declare module "Magento_PageBuilder/js/content-type/buttons/preview" {
      * @returns {JQueryUI.Sortable}
      */
     getSortableOptions(
-      orientation?: string,
-      tolerance?: string
+        orientation?: string,
+        tolerance?: string
     ): SortableOptionsInterface;
     /**
      * Resize width of all child buttons. Dependently make them the same width if configured.
@@ -3108,11 +3332,11 @@ declare module "Magento_PageBuilder/js/content-type/button-item/converter/style/
     toDom(name: string, data: DataObject): string;
   }
 }
-declare module "Magento_PageBuilder/js/content-type/buttons/converter/style/display/flex" {
+declare module "Magento_PageBuilder/js/content-type/buttons/converter/style/display/boolean" {
   import ConverterInterface from "Magento_PageBuilder/js/converter/converter-interface";
   import { DataObject } from "Magento_PageBuilder/js/data-store";
 
-  export default class Flex implements ConverterInterface {
+  export default class Boolean implements ConverterInterface {
     /**
      * Convert value to internal format
      *
@@ -3121,7 +3345,7 @@ declare module "Magento_PageBuilder/js/content-type/buttons/converter/style/disp
      */
     fromDom(value: string): boolean;
     /**
-     * Convert value to knockout format, if buttons are displayed they should be inline block
+     * Convert value to knockout format, if buttons are displayed they should be reset to default
      *
      * @param {string} name
      * @param {DataObject} data
@@ -3130,11 +3354,11 @@ declare module "Magento_PageBuilder/js/content-type/buttons/converter/style/disp
     toDom(name: string, data: DataObject): string;
   }
 }
-declare module "Magento_PageBuilder/js/content-type/buttons/converter/style/display/inline-block" {
+declare module "Magento_PageBuilder/js/content-type/buttons/converter/style/display/flex" {
   import ConverterInterface from "Magento_PageBuilder/js/converter/converter-interface";
   import { DataObject } from "Magento_PageBuilder/js/data-store";
 
-  export default class InlineBlock implements ConverterInterface {
+  export default class Flex implements ConverterInterface {
     /**
      * Convert value to internal format
      *
@@ -3202,7 +3426,7 @@ declare module "Magento_PageBuilder/js/content-type/column-group/drag-and-drop" 
    * @returns {any[]}
    */
   export function calculateDropPositions(
-    group: ContentTypeCollectionInterface<ColumnGroupPreview>
+      group: ContentTypeCollectionInterface<ColumnGroupPreview>
   ): DropPosition[];
   export interface DropPosition {
     left: number;
@@ -3225,9 +3449,9 @@ declare module "Magento_PageBuilder/js/content-type/column-group/factory" {
    * @returns {Promise<ContentTypeCollectionInterface>}
    */
   export function createColumn(
-    columnGroup: ContentTypeCollectionInterface,
-    width: number,
-    index?: number
+      columnGroup: ContentTypeCollectionInterface,
+      width: number,
+      index?: number
   ): Promise<ContentTypeCollectionInterface<ColumnPreview>>;
 }
 declare module "Magento_PageBuilder/js/content-type/column-group/registry" {
@@ -3239,8 +3463,8 @@ declare module "Magento_PageBuilder/js/content-type/column-group/registry" {
    * @returns {ContentTypeCollectionInterface}
    */
   export function getDragColumn(): ContentTypeCollectionInterface<
-    ColumnPreview
-  >;
+      ColumnPreview
+      >;
   /**
    * Remove the drag column reference
    */
@@ -3251,7 +3475,7 @@ declare module "Magento_PageBuilder/js/content-type/column-group/registry" {
    * @param {ContentTypeCollectionInterface<ColumnPreview>} column
    */
   export function setDragColumn(
-    column: ContentTypeCollectionInterface<ColumnPreview>
+      column: ContentTypeCollectionInterface<ColumnPreview>
   ): void;
 }
 declare module "Magento_PageBuilder/js/content-type/column-group/preview" {
@@ -3307,9 +3531,9 @@ declare module "Magento_PageBuilder/js/content-type/column-group/preview" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ColumnGroup,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ColumnGroup,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Retrieve the resize utils
@@ -3336,8 +3560,8 @@ declare module "Magento_PageBuilder/js/content-type/column-group/preview" {
      * @param {number} newIndex
      */
     onColumnSort(
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      newIndex: number
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        newIndex: number
     ): void;
     /**
      * Handle a column being resized
@@ -3347,9 +3571,9 @@ declare module "Magento_PageBuilder/js/content-type/column-group/preview" {
      * @param {ContentTypeCollectionInterface<ColumnPreview>} adjustedColumn
      */
     onColumnResize(
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      width: number,
-      adjustedColumn: ContentTypeCollectionInterface<ColumnPreview>
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        width: number,
+        adjustedColumn: ContentTypeCollectionInterface<ColumnPreview>
     ): void;
     /**
      * Init the droppable & resizing interactions
@@ -3382,8 +3606,8 @@ declare module "Magento_PageBuilder/js/content-type/column-group/preview" {
      * @param {JQuery} handle
      */
     registerResizeHandle(
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      handle: JQuery
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        handle: JQuery
     ): void;
     /**
      * Bind draggable instances to the child columns
@@ -3583,7 +3807,7 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
      * @returns {number}
      */
     getColumnWidth(
-      column: ContentTypeCollectionInterface<ColumnPreview>
+        column: ContentTypeCollectionInterface<ColumnPreview>
     ): number;
     /**
      * Get the total width of all columns in the group
@@ -3599,8 +3823,8 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
      * @returns {ColumnWidth[]}
      */
     determineColumnWidths(
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      groupPosition: GroupPositionCache
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        groupPosition: GroupPositionCache
     ): ColumnWidth[];
     /**
      * Find a column which can be shrunk for the current resize action
@@ -3610,8 +3834,8 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
      * @returns {ContentTypeCollectionInterface<ColumnPreview>}
      */
     findShrinkableColumnForResize(
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      direction: "left" | "right"
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        direction: "left" | "right"
     ): ContentTypeCollectionInterface<ColumnPreview>;
     /**
      * Find a shrinkable column outwards from the current column
@@ -3620,7 +3844,7 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
      * @returns {ContentTypeCollectionInterface<ColumnPreview>}
      */
     findShrinkableColumn(
-      column: ContentTypeCollectionInterface<ColumnPreview>
+        column: ContentTypeCollectionInterface<ColumnPreview>
     ): ContentTypeCollectionInterface<ColumnPreview>;
     /**
      * Calculate the ghost size for the resizing action
@@ -3633,11 +3857,11 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
      * @returns {number}
      */
     calculateGhostWidth(
-      groupPosition: GroupPositionCache,
-      currentPos: number,
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      modifyColumnInPair: string,
-      maxGhostWidth: MaxGhostWidth
+        groupPosition: GroupPositionCache,
+        currentPos: number,
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        modifyColumnInPair: string,
+        maxGhostWidth: MaxGhostWidth
     ): number;
     /**
      * Determine which column in the group should be adjusted for the current resize action
@@ -3648,9 +3872,9 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
      * @returns {[ContentTypeCollectionInterface<ColumnPreview>, string, string]}
      */
     determineAdjustedColumn(
-      currentPos: number,
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      history: ResizeHistory
+        currentPos: number,
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        history: ResizeHistory
     ): [ContentTypeCollectionInterface<ColumnPreview>, string, string];
     /**
      * Resize a column to a specific width
@@ -3660,9 +3884,9 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
      * @param {ContentTypeCollectionInterface<Preview>} shrinkableColumn
      */
     resizeColumn(
-      column: ContentTypeCollectionInterface<ColumnPreview>,
-      width: number,
-      shrinkableColumn: ContentTypeCollectionInterface<ColumnPreview>
+        column: ContentTypeCollectionInterface<ColumnPreview>,
+        width: number,
+        shrinkableColumn: ContentTypeCollectionInterface<ColumnPreview>
     ): void;
     /**
      * Determine if the grid supports the new proposed grid size
@@ -3682,7 +3906,7 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
    * @returns {number}
    */
   export function getColumnIndexInGroup(
-    column: ContentTypeCollectionInterface<ColumnPreview>
+      column: ContentTypeCollectionInterface<ColumnPreview>
   ): number;
   /**
    * Retrieve the adjacent column based on a direction of +1 or -1
@@ -3692,8 +3916,8 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
    * @returns {ContentTypeCollectionInterface<Preview>}
    */
   export function getAdjacentColumn(
-    column: ContentTypeCollectionInterface<ColumnPreview>,
-    direction: "+1" | "-1"
+      column: ContentTypeCollectionInterface<ColumnPreview>,
+      direction: "+1" | "-1"
   ): ContentTypeCollectionInterface<ColumnPreview>;
   /**
    * Determine the max ghost width based on the calculated columns
@@ -3702,7 +3926,7 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
    * @returns {MaxGhostWidth}
    */
   export function determineMaxGhostWidth(
-    columnWidths: ColumnWidth[]
+      columnWidths: ColumnWidth[]
   ): MaxGhostWidth;
   /**
    * Return the column width to 8 decimal places if it's not a whole number
@@ -3723,9 +3947,9 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
    * @returns {boolean}
    */
   export function comparator(
-    num1: number,
-    num2: number,
-    threshold: number
+      num1: number,
+      num2: number,
+      threshold: number
   ): boolean;
   /**
    * Update the width of a column
@@ -3734,8 +3958,8 @@ declare module "Magento_PageBuilder/js/content-type/column/resize" {
    * @param {number} width
    */
   export function updateColumnWidth(
-    column: ContentTypeCollectionInterface<ColumnPreview>,
-    width: number
+      column: ContentTypeCollectionInterface<ColumnPreview>,
+      width: number
   ): void;
 }
 declare module "Magento_PageBuilder/js/content-type/column-group/grid-size" {
@@ -3767,9 +3991,9 @@ declare module "Magento_PageBuilder/js/content-type/column-group/grid-size" {
    * @param {Map<number, number[]>} gridSizeHistory
    */
   export function resizeGrid(
-    columnGroup: ContentTypeCollectionInterface<ColumnGroupPreview>,
-    newGridSize: number,
-    gridSizeHistory: Map<number, number[]>
+      columnGroup: ContentTypeCollectionInterface<ColumnGroupPreview>,
+      newGridSize: number,
+      gridSizeHistory: Map<number, number[]>
   ): void;
   export class GridSizeError extends Error {
     constructor(m: string);
@@ -3800,9 +4024,9 @@ declare module "Magento_PageBuilder/js/content-type/column/preview" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Bind events
@@ -3840,8 +4064,8 @@ declare module "Magento_PageBuilder/js/content-type/column/preview" {
      * @returns {Promise<ContentTypeCollectionInterface> | void}
      */
     clone(
-      contentType: ContentTypeCollectionInterface<Preview>,
-      autoAppend?: boolean
+        contentType: ContentTypeCollectionInterface<Preview>,
+        autoAppend?: boolean
     ): Promise<ContentTypeCollectionInterface> | void;
     /**
      * Update the display label for the column
@@ -3887,18 +4111,19 @@ declare module "Magento_PageBuilder/js/content-type/heading/preview" {
   import BasePreview from "Magento_PageBuilder/js/content-type/preview";
 
   export default class Preview extends BasePreview
-    implements ContentTypeToolbarPreviewInterface {
+      implements ContentTypeToolbarPreviewInterface {
     toolbar: Toolbar;
     private element;
+    private afterRenderDeferred;
     /**
      * @param {ContentTypeInterface} contentType
      * @param {ContentTypeConfigInterface} config
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Return an array of options
@@ -3907,12 +4132,19 @@ declare module "Magento_PageBuilder/js/content-type/heading/preview" {
      */
     retrieveOptions(): OptionsInterface;
     /**
-     * On render init the tabs widget
+     * On render init the heading
      *
      * @param {Element} element
      */
     afterRender(element: Element): void;
     bindEvents(): void;
+    /**
+     * Get option value from observable data.
+     *
+     * @param {string} key
+     * @return {*}
+     */
+    getOptionValue(key: string): any;
     /**
      * Build and return the tool bar options for heading
      *
@@ -4037,6 +4269,8 @@ declare module "Magento_PageBuilder/js/content-type/map/converter/attribute/loca
 }
 declare module "Magento_PageBuilder/js/content-type/products/preview" {
   /// <reference types="knockout" />
+  /// <reference types="jquery" />
+  import "slick";
   import ContentTypeInterface from "Magento_PageBuilder/js/content-type";
   import ContentTypeConfigInterface from "Magento_PageBuilder/js/content-type-config.types";
   import { OptionsInterface } from "Magento_PageBuilder/js/content-type-menu/option.types";
@@ -4046,14 +4280,27 @@ declare module "Magento_PageBuilder/js/content-type/products/preview" {
   export default class Preview extends BasePreview {
     displayPreview: KnockoutObservable<boolean>;
     placeholderText: KnockoutObservable<string>;
+    previewElement: JQueryDeferred<Element>;
+    widgetUnsanitizedHtml: KnockoutObservable<string>;
+    protected slidesToShow: number;
+    private element;
+    private productItemSelector;
+    private centerModeClass;
     private messages;
+    /**
+     * Define keys which when changed should not trigger the slider to be rebuilt
+     *
+     * @type {string[]}
+     */
+    private ignoredKeysForBuild;
+    private previousData;
     /**
      * @inheritdoc
      */
     constructor(
-      contentType: ContentTypeInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Return an array of options
@@ -4062,9 +4309,73 @@ declare module "Magento_PageBuilder/js/content-type/products/preview" {
      */
     retrieveOptions(): OptionsInterface;
     /**
+     * On afterRender callback.
+     *
+     * @param {Element} element
+     */
+    onAfterRender(element: Element): void;
+    /**
      * @inheritdoc
      */
     protected afterObservablesUpdated(): void;
+    protected initSlider(): void;
+    /**
+     * Build the slick config object
+     *
+     * @returns {{autoplay: boolean; autoplay: number; infinite: boolean; arrows: boolean; dots: boolean;
+     * centerMode: boolean; slidesToScroll: number; slidesToShow: number;}}
+     */
+    private buildSlickConfig;
+    /**
+     * Determine if the data has changed, whilst ignoring certain keys which don't require a rebuild
+     *
+     * @param {DataObject} previousData
+     * @param {DataObject} newData
+     * @returns {boolean}
+     */
+    private hasDataChanged;
+  }
+}
+declare module "Magento_PageBuilder/js/content-type/products/mass-converter/carousel-widget-directive" {
+  import {
+    ConverterConfigInterface,
+    ConverterDataInterface
+  } from "Magento_PageBuilder/js/mass-converter/converter-interface";
+  import BaseWidgetDirective from "Magento_PageBuilder/js/mass-converter/widget-directive-abstract";
+
+  export default class WidgetDirective extends BaseWidgetDirective {
+    /**
+     * Convert value to internal format
+     *
+     * @param {object} data
+     * @param {object} config
+     * @returns {object}
+     */
+    fromDom(
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
+    ): object;
+    /**
+     * Convert value to knockout format
+     *
+     * @param {object} data
+     * @param {object} config
+     * @returns {object}
+     */
+    toDom(
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
+    ): object;
+    /**
+     * @param {string} content
+     * @returns {string}
+     */
+    private encodeWysiwygCharacters;
+    /**
+     * @param {string} content
+     * @returns {string}
+     */
+    private decodeWysiwygCharacters;
   }
 }
 declare module "Magento_PageBuilder/js/content-type/products/mass-converter/widget-directive" {
@@ -4083,8 +4394,8 @@ declare module "Magento_PageBuilder/js/content-type/products/mass-converter/widg
      * @returns {object}
      */
     fromDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
     /**
      * Convert value to knockout format
@@ -4094,8 +4405,8 @@ declare module "Magento_PageBuilder/js/content-type/products/mass-converter/widg
      * @returns {object}
      */
     toDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
     /**
      * @param {string} content
@@ -4146,9 +4457,9 @@ declare module "Magento_PageBuilder/js/content-type/row/preview" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Use the conditional remove to disable the option when the content type has a single child
@@ -4295,9 +4606,9 @@ declare module "Magento_PageBuilder/js/content-type/slider/preview" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeCollectionInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeCollectionInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Return an array of options
@@ -4339,9 +4650,9 @@ declare module "Magento_PageBuilder/js/content-type/slider/preview" {
      * @param {boolean} force
      */
     navigateToSlide(
-      slideIndex: number,
-      dontAnimate?: boolean,
-      force?: boolean
+        slideIndex: number,
+        dontAnimate?: boolean,
+        force?: boolean
     ): void;
     /**
      * After child render record element
@@ -4361,8 +4672,8 @@ declare module "Magento_PageBuilder/js/content-type/slider/preview" {
      * operation
      */
     onSortStop(
-      event: JQueryEventObject,
-      params: JQueryUI.SortableUIParams
+        event: JQueryEventObject,
+        params: JQueryUI.SortableUIParams
     ): void;
     /**
      * Add a slide into the slider
@@ -4429,6 +4740,7 @@ declare module "Magento_PageBuilder/js/content-type/slider/preview" {
   }
 }
 declare module "Magento_PageBuilder/js/content-type/slide/preview" {
+  /// <reference types="knockout" />
   /// <reference types="jquery" />
   import { OptionsInterface } from "Magento_PageBuilder/js/content-type-menu/option.types";
   import Uploader from "Magento_PageBuilder/js/uploader";
@@ -4436,6 +4748,7 @@ declare module "Magento_PageBuilder/js/content-type/slide/preview" {
 
   export default class Preview extends BasePreview {
     buttonPlaceholder: string;
+    slideName: KnockoutObservable<string>;
     /**
      * Wysiwyg instance
      */
@@ -4688,7 +5001,7 @@ declare module "Magento_PageBuilder/js/content-type/slide/wysiwyg/tinymce4/compo
   import WysiwygComponentInitializerInterface from "Magento_PageBuilder/js/wysiwyg/component-initializer-interface";
   import WysiwygInterface from "Magento_PageBuilder/js/wysiwyg/wysiwyg-interface";
   export default class ComponentInitializer
-    implements WysiwygComponentInitializerInterface {
+      implements WysiwygComponentInitializerInterface {
     /**
      * The editor element
      */
@@ -4758,7 +5071,7 @@ declare module "Magento_PageBuilder/js/wysiwyg/config-modifier-interface" {
 declare module "Magento_PageBuilder/js/content-type/slide/wysiwyg/tinymce4/config-modifier" {
   import WysiwygConfigInitializerInterface from "Magento_PageBuilder/js/wysiwyg/config-modifier-interface";
   export default class ConfigModifier
-    implements WysiwygConfigInitializerInterface {
+      implements WysiwygConfigInitializerInterface {
     /**
      * Initialize the config
      *
@@ -4799,9 +5112,9 @@ declare module "Magento_PageBuilder/js/content-type/tabs/preview" {
      * @param {ObservableUpdater} observableUpdater
      */
     constructor(
-      contentType: ContentTypeCollectionInterface,
-      config: ContentTypeConfigInterface,
-      observableUpdater: ObservableUpdater
+        contentType: ContentTypeCollectionInterface,
+        config: ContentTypeConfigInterface,
+        observableUpdater: ObservableUpdater
     );
     /**
      * Refresh the tabs instance when new content appears
@@ -4811,9 +5124,9 @@ declare module "Magento_PageBuilder/js/content-type/tabs/preview" {
      * @param {number} activeIndex
      */
     refreshTabs(
-      focusIndex?: number,
-      forceFocus?: boolean,
-      activeIndex?: number
+        focusIndex?: number,
+        forceFocus?: boolean,
+        activeIndex?: number
     ): void;
     /**
      * Set the active tab, we maintain a reference to it in an observable for when we rebuild the tab instance
@@ -4928,8 +5241,8 @@ declare module "Magento_PageBuilder/js/content-type/tabs/mass-converter/header-a
      * @returns {object}
      */
     fromDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
     /**
      * Add our tab alignment class into the data for the tabs
@@ -4939,8 +5252,8 @@ declare module "Magento_PageBuilder/js/content-type/tabs/mass-converter/header-a
      * @returns {object}
      */
     toDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
   }
 }
@@ -5007,7 +5320,7 @@ declare module "Magento_PageBuilder/js/content-type/text/wysiwyg/tinymce4/compon
   import WysiwygComponentInitializerInterface from "Magento_PageBuilder/js/wysiwyg/component-initializer-interface";
   import WysiwygInterface from "Magento_PageBuilder/js/wysiwyg/wysiwyg-interface";
   export default class ComponentInitializer
-    implements WysiwygComponentInitializerInterface {
+      implements WysiwygComponentInitializerInterface {
     /**
      * The editor element
      */
@@ -5035,7 +5348,7 @@ declare module "Magento_PageBuilder/js/content-type/text/wysiwyg/tinymce4/compon
 declare module "Magento_PageBuilder/js/content-type/text/wysiwyg/tinymce4/config-modifier" {
   import WysiwygConfigInitializerInterface from "Magento_PageBuilder/js/wysiwyg/config-modifier-interface";
   export default class ConfigModifier
-    implements WysiwygConfigInitializerInterface {
+      implements WysiwygConfigInitializerInterface {
     /**
      * Initialize the config
      *
@@ -5172,8 +5485,8 @@ declare module "Magento_PageBuilder/js/utils/url" {
    * @api
    */
   export function convertUrlToPathIfOtherUrlIsOnlyAPath(
-    url: string,
-    otherUrl: string
+      url: string,
+      otherUrl: string
   ): string;
 }
 declare module "Magento_PageBuilder/js/utils/image" {
@@ -5226,14 +5539,14 @@ declare module "Magento_PageBuilder/js/converter/attribute/src" {
      * @returns {string}
      */
     toDom(
-      name: string,
-      data: {
-        [key: string]: {
-          [key: number]: {
-            url: string;
+        name: string,
+        data: {
+          [key: string]: {
+            [key: number]: {
+              url: string;
+            };
           };
-        };
-      }
+        }
     ): string;
   }
 }
@@ -5242,6 +5555,28 @@ declare module "Magento_PageBuilder/js/converter/attribute/preview/src" {
   import ConverterInterface from "Magento_PageBuilder/js/converter/converter-interface";
 
   export default class Src implements ConverterInterface {
+    /**
+     * Convert value to internal format
+     *
+     * @param value string
+     * @returns {string | object}
+     */
+    fromDom(value: string): string | object;
+    /**
+     * Convert value to knockout format
+     *
+     * @param name string
+     * @param data Object
+     * @returns {string}
+     */
+    toDom(name: string, data: DataObject): string;
+  }
+}
+declare module "Magento_PageBuilder/js/converter/attribute/preview/store-id" {
+  import { DataObject } from "Magento_PageBuilder/js/data-store";
+  import ConverterInterface from "Magento_PageBuilder/js/converter/converter-interface";
+
+  export default class StoreId implements ConverterInterface {
     /**
      * Convert value to internal format
      *
@@ -5621,8 +5956,8 @@ declare module "Magento_PageBuilder/js/mass-converter/background-images" {
      * @returns {object}
      */
     fromDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): ConverterDataInterface;
     /**
      * Process data before it's converted by element converters
@@ -5632,8 +5967,8 @@ declare module "Magento_PageBuilder/js/mass-converter/background-images" {
      * @returns {object}
      */
     toDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): ConverterDataInterface;
   }
 }
@@ -5651,8 +5986,8 @@ declare module "Magento_PageBuilder/js/mass-converter/empty-mobile-image" {
      * @returns {object}
      */
     fromDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
     /**
      * Process data before it's converted by element converters
@@ -5662,10 +5997,19 @@ declare module "Magento_PageBuilder/js/mass-converter/empty-mobile-image" {
      * @returns {object}
      */
     toDom(
-      data: ConverterDataInterface,
-      config: ConverterConfigInterface
+        data: ConverterDataInterface,
+        config: ConverterConfigInterface
     ): object;
   }
+}
+declare module "Magento_PageBuilder/js/master-format/filter-html" {
+  /**
+   * Filter the HTML output to only include necessary attributes & nodes
+   *
+   * @param {JQuery} element
+   * @returns {JQuery}
+   */
+  export default function filterHtml(element: JQuery): JQuery;
 }
 declare module "Magento_PageBuilder/js/master-format/read-interface" {
   export interface ReadInterface {
@@ -5706,7 +6050,7 @@ declare module "Magento_PageBuilder/js/property/property-reader-pool-factory" {
    * Create a new instance of property reader pool
    */
   export default function create(
-    contentType: string
+      contentType: string
   ): Promise<typeof PropertyReaderPool>;
 }
 declare module "Magento_PageBuilder/js/master-format/read/configurable" {
@@ -5789,6 +6133,68 @@ declare module "Magento_PageBuilder/js/master-format/read/configurable" {
      */
     private convertData;
   }
+}
+declare module "Magento_PageBuilder/js/master-format/render/events" {
+  const _default: {
+    on(): any;
+    off(): any;
+    trigger(): any;
+  };
+  /**
+   * The frame does not need to create or observe events, however the app will naturally attempt to. So let's stop that!
+   */
+  export default _default;
+}
+declare module "Magento_PageBuilder/js/master-format/render/frame" {
+  import ConfigInterface from "Magento_PageBuilder/js/config.types";
+  /**
+   * Listen for requests from the parent window for a render
+   */
+  export default function listen(config: ConfigInterface): void;
+  /**
+   * Use our MessageChannel to load a template from the parent window, this is required as the iframe isn't allowed to
+   * make same origin XHR requests.
+   *
+   * @param name
+   */
+  export function loadTemplate(name: string): Promise<string>;
+}
+declare module "Magento_PageBuilder/js/master-format/render/requirejs/text" {
+  /**
+   * Within our render frame we override the RequireJS text! plugin, this is originally implemented within
+   * lib/web/mage/requirejs/text.js. The override uses the MessageChannel to communicate with the parent frame to
+   * retrieve any requested HTML knockout template. We do this due to the sandbox restrictions on the iframe disallow
+   * XHR requests to the same origin domain.
+   */
+  /**
+   * Load a template
+   *
+   * @param name
+   * @param req
+   * @param onLoad
+   */
+  export function load(
+      name: string,
+      req: () => {},
+      onLoad: {
+        (template: string): {};
+        error: (error: string) => {};
+      }
+  ): void;
+  /**
+   * Retrieve a template
+   *
+   * @param url
+   * @param callback
+   * @param fail
+   * @param headers
+   */
+  export function get(
+      url: string,
+      callback: () => {},
+      fail: () => {},
+      headers: {}
+  ): void;
 }
 declare module "Magento_PageBuilder/js/property/attribute-reader" {
   import PropertyReaderInterface from "Magento_PageBuilder/js/property/property-reader-interface";
@@ -5880,6 +6286,10 @@ declare module "Magento_PageBuilder/js/wysiwyg/tinymce4" {
      */
     private fieldName;
     /**
+     * Create a debounce to save the content into the data store
+     */
+    private saveContentDebounce;
+    /**
      * @param {String} contentTypeId The ID in the registry of the content type.
      * @param {String} elementId The ID of the editor element in the DOM.
      * @param {AdditionalDataConfigInterface} config The configuration for the wysiwyg.
@@ -5888,12 +6298,12 @@ declare module "Magento_PageBuilder/js/wysiwyg/tinymce4" {
      * @param {String} stageId The ID in the registry of the stage containing the content type.
      */
     constructor(
-      contentTypeId: string,
-      elementId: string,
-      config: AdditionalDataConfigInterface,
-      dataStore: DataStore,
-      fieldName: string,
-      stageId: string
+        contentTypeId: string,
+        elementId: string,
+        config: AdditionalDataConfigInterface,
+        dataStore: DataStore,
+        fieldName: string,
+        stageId: string
     );
     /**
      * @returns {WysiwygInstanceInterface}
@@ -5919,10 +6329,6 @@ declare module "Magento_PageBuilder/js/wysiwyg/tinymce4" {
      * Update content in our stage wysiwyg after our data store gets updated
      */
     private setContentFromDataStoreToWysiwyg;
-    /**
-     * Clear any selections in the editable area
-     */
-    private clearSelection;
     /**
      * Adjust padding on stage if in fullscreen mode to accommodate inline wysiwyg toolbar overflowing fixed viewport
      */
